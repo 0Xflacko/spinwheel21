@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WTF Games Spinning Wheel 🎯
+
+A Next.js web application featuring an interactive spinning wheel for prize giveaways and email collection.
+
+## Features
+
+- 🎲 Interactive spinning wheel with 6 prize segments ($20, $50, $100, $200, $300, $500)
+- 📧 Email collection with Google Sheets integration
+- 🎉 Animated confetti and prize celebration
+- 📱 Fully responsive design (mobile-first)
+- ⚡ Built with Next.js 15 and TypeScript
+- 🎨 Styled with Tailwind CSS
+
+## Live Demo
+
+🚀 **Deployed on Vercel**: [Your deployment URL will go here]
+
+## Tech Stack
+
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion
+- **Backend**: Next.js API Routes
+- **Database**: Google Sheets API
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+- Google Cloud Console account (for Sheets API)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/0xflacko/wtf-games-spinwheel.git
+cd wtf-games-spinwheel
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Fill in your Google Sheets API credentials.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env.local` file with the following variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+GOOGLE_SHEETS_ID=your_google_sheets_id
+GOOGLE_PROJECT_ID=your_project_id
+GOOGLE_PRIVATE_KEY_ID=your_private_key_id
+GOOGLE_PRIVATE_KEY=your_private_key
+GOOGLE_CLIENT_EMAIL=your_service_account_email
+GOOGLE_CLIENT_ID=your_client_id
+```
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This app is optimized for deployment on Vercel:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add your environment variables in Vercel dashboard
+4. Deploy!
+
+See `VERCEL_DEPLOYMENT_GUIDE.md` for detailed instructions.
+
+## Analytics Setup
+
+For conversion tracking and analytics, see `GOOGLE_ANALYTICS_CONVERSION_TRACKING.md`.
+
+## Google Sheets Integration
+
+For setting up the email collection system, see `GOOGLE_SHEETS_SETUP.md`.
+
+## Project Structure
+
+```
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Landing page
+├── components/            # React components
+│   ├── CompletionPage.tsx # Prize/email form page
+│   └── SpinWheel.tsx      # Spinning wheel component
+├── lib/                   # Utility libraries
+│   └── googleSheets.ts    # Google Sheets integration
+├── public/               # Static assets
+│   ├── logo/            # WTF Games logo
+│   ├── wheel_prize/     # Wheel graphics
+│   └── ...              # Other assets
+├── utils/               # Utility functions
+│   └── prizeCalculator.ts # Prize calculation logic
+└── ...
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is private and proprietary to WTF Games.
+
+## Support
+
+For questions or support, contact: dinokou01@gmail.com
+
+---
+
+Built with ❤️ by [0xflacko](https://github.com/0xflacko)
