@@ -142,7 +142,7 @@ export async function initializeSheet(): Promise<boolean> {
         console.log("Headers already exist in the sheet");
         return true;
       }
-    } catch (rangeError) {
+    } catch {
       console.log(
         "Sheet may be empty or range doesn't exist, will add headers"
       );

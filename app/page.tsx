@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import SpinWheel from "../components/SpinWheel";
 import CompletionPage from "../components/CompletionPage";
 
@@ -37,11 +36,7 @@ export default function Home() {
     // You can add API calls, form validation, etc.
   };
 
-  const resetGame = () => {
-    setShowCompletion(false);
-    setPrizeAmount(0);
-    setRotationDegrees(0);
-  };
+
 
   // Remove this effect - let the SpinWheel handle the final rotation calculation
 

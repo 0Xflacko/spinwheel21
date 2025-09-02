@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 
 interface CompletionPageProps {
   prizeAmount: number;
@@ -101,7 +100,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
                 "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
             }}
           >
-            WE'LL NOTIFY WINNERS BY EMAIL
+            WE&apos;LL NOTIFY WINNERS BY EMAIL
           </p>
           <p
             className="text-white text-base sm:text-lg font-medium uppercase"
