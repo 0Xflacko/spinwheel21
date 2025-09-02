@@ -1,103 +1,226 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import SpinWheel from "../components/SpinWheel";
+import CompletionPage from "../components/CompletionPage";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [rotationDegrees, setRotationDegrees] = useState(0);
+  const [showCompletion, setShowCompletion] = useState(false);
+  const [prizeAmount, setPrizeAmount] = useState(0);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleSpinClick = () => {
+    if (!isSpinning) {
+      setIsSpinning(true);
+      const randomDegrees = Math.floor(Math.random() * 360) + 360 * 5; // Spin at least 5 full rotations
+      setRotationDegrees(randomDegrees);
+
+      setTimeout(() => {
+        setIsSpinning(false);
+      }, 10000); // Stop after 10 seconds
+    }
+  };
+
+  const handleSpinComplete = (amount: number) => {
+    setPrizeAmount(amount);
+    // Show completion page after a short delay
+    setTimeout(() => {
+      setShowCompletion(true);
+    }, 1000);
+  };
+
+  const handleRegister = () => {
+    // Handle registration logic here
+    console.log(`User registered for $${prizeAmount} USDC raffle`);
+    // You can add API calls, form validation, etc.
+  };
+
+  const resetGame = () => {
+    setShowCompletion(false);
+    setPrizeAmount(0);
+    setRotationDegrees(0);
+  };
+
+  // Remove this effect - let the SpinWheel handle the final rotation calculation
+
+  // Show completion page if spin is complete
+  if (showCompletion) {
+    return (
+      <CompletionPage prizeAmount={prizeAmount} onRegister={handleRegister} />
+    );
+  }
+
+  return (
+    <div
+      className="min-h-screen w-full flex justify-center items-start relative overflow-hidden px-4 sm:px-6 lg:px-8"
+      style={{
+        paddingTop: "60px",
+        background: "var(--Black, #000)",
+      }}
+    >
+      {/* Background Image with Radial Gradient Overlay */}
+      <div
+        className="absolute opacity-full pointer-events-none inset-0"
+        style={{
+          backgroundImage: "url('/background_image/image 26 (Traced) (1).svg')",
+          backgroundSize: "cover",
+          backgroundPosition: "calc(50% - 25px) calc(50% + 30px)", // Shift 10px left, 10px down
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "scroll",
+          zIndex: 1,
+        }}
+      ></div>
+      {/* Header with diagonal stripes - positioned at the very top */}
+      <div
+        className="absolute top-0 left-0 w-full h-48 sm:h-56 md:h-64 lg:h-80 xl:h-96"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(0, 0, 0, 0.90) 0%, rgba(0, 0, 0, 0.90) 100%), linear-gradient(90deg, #05C5FF 55.31%, #0F0 97.78%)",
+        }}
+      >
+        <img
+          src="/header/Desktop Banners (1).svg"
+          alt="Header Banner"
+          className="w-full h-full object-cover"
+        />
+
+        {/* WTF Games Logo and Text positioned over the header */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/4 sm:-translate-y-1/2 flex flex-col items-center px-0 sm:px-4 z-20">
+          {/* WTF Logo */}
+          <div className="w-48 h-36 sm:w-48 sm:h-36 md:w-56 md:h-42 lg:w-64 lg:h-48">
+            <img
+              src="/logo/logo.svg"
+              alt="WTF Logo"
+              className="w-full h-full"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          {/* Header Text */}
+          <div
+            className="w-screen sm:w-full sm:max-w-sm md:max-w-lg lg:max-w-xl text-center mt-2 sm:mt-4 px-0 sm:px-0"
+            style={{
+              fontFamily:
+                "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
+            }}
           >
-            Read our docs
-          </a>
+            <div className="text-white text-xl sm:text-xl md:text-xl lg:text-2xl font-bold uppercase leading-tight">
+              WIN AN ENTRY INTO ONE OF OUR FREE
+            </div>
+            <div className="text-xl sm:text-xl md:text-xl lg:text-2xl font-bold uppercase leading-tight">
+              <span style={{ color: "#00FF00" }}>PRIZE RAFFLES</span>
+              <span className="text-white"> - JUST SPIN!</span>
+            </div>
+
+            {/* Prize Draw Date */}
+            <div
+              className="opacity-70 text-center text-white text-xs sm:text-sm font-medium leading-none mt-2 sm:mt-3"
+              style={{
+                fontFamily:
+                  "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
+              }}
+            >
+              PRIZE DRAW DATE
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+
+      <div className="flex flex-col items-center w-full max-w-4xl mt-72 sm:mt-64 md:mt-72 lg:mt-88 xl:mt-104 pt-4 sm:pt-8 md:pt-2">
+        {/* Spin Wheel */}
+        <SpinWheel
+          isSpinning={isSpinning}
+          rotationDegrees={rotationDegrees}
+          onSpinComplete={handleSpinComplete}
+        />
+
+        {/* Spin Button */}
+        <div
+          data-size="Large"
+          data-state={isSpinning ? "Disabled" : "Primary"}
+          data-type="Primary"
+          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-80 py-3 sm:py-4 px-4 sm:px-6 rounded-lg inline-flex justify-center items-center gap-4 mt-8 sm:mt-10 md:mt-12 lg:mt-6 mb-6 sm:mb-8 cursor-pointer"
+          style={{ backgroundColor: "#00FF00" }}
+          onClick={handleSpinClick}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div
+            className="text-center justify-center text-black text-lg sm:text-xl md:text-2xl font-bold leading-normal"
+            style={{
+              fontFamily:
+                "'Korolev', 'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
+            }}
+          >
+            SPIN THE WHEEL
+          </div>
+        </div>
+
+        {/* Footer Content */}
+        <div className="flex flex-col items-center justify-center text-white px-4">
+          <p
+            className="text-white text-base sm:text-sm md:text-base font-medium uppercase mb-3 sm:mb-4 text-center"
+            style={{
+              fontFamily:
+                "'Korolev', 'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
+            }}
+          >
+            Home of the world famous
+          </p>
+          <div className="flex justify-center mb-4 sm:mb-3 z-20">
+            <img
+              src="/leagues/leagues.svg"
+              alt="Leagues Logo"
+              className="h-10 sm:h-8 md:h-10"
+            />
+          </div>
+          <div className="flex gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6">
+            <a
+              href="https://www.youtube.com/@WTFLeagues/featured"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/instagram (1).svg"
+                alt="Instagram"
+                className="h-5 sm:h-6 md:h-7"
+              />
+            </a>
+            <a
+              href="https://www.instagram.com/wtfleagues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/instagram.svg"
+                alt="Instagram"
+                className="h-5 sm:h-6 md:h-7"
+              />
+            </a>
+            <a
+              href="https://x.com/WTFLeagues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/twitter.svg"
+                alt="Twitter"
+                className="h-5 sm:h-6 md:h-7"
+              />
+            </a>
+            <a
+              href="https://www.tiktok.com/@wtfleagues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/tiktok.svg"
+                alt="TikTok"
+                className="h-5 sm:h-6 md:h-7"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
