@@ -7,10 +7,14 @@ export async function GET() {
       hasGoogleProjectId: !!process.env.GOOGLE_PROJECT_ID,
       hasGooglePrivateKeyId: !!process.env.GOOGLE_PRIVATE_KEY_ID,
       hasGooglePrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+      hasGooglePrivateKeyBase64: !!process.env.GOOGLE_PRIVATE_KEY_BASE64,
       hasGoogleClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
       hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
       // Show partial values for debugging (without exposing secrets)
       sheetsIdLength: process.env.GOOGLE_SHEETS_ID?.length || 0,
+      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length || 0,
+      privateKeyBase64Length:
+        process.env.GOOGLE_PRIVATE_KEY_BASE64?.length || 0,
       projectIdPreview:
         process.env.GOOGLE_PROJECT_ID?.substring(0, 10) + "..." || "missing",
       clientEmailPreview:

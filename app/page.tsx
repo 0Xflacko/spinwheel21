@@ -36,8 +36,6 @@ export default function Home() {
     // You can add API calls, form validation, etc.
   };
 
-
-
   // Remove this effect - let the SpinWheel handle the final rotation calculation
 
   // Show completion page if spin is complete
