@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import Script from "next/script";
 
 interface MetaPixelProps {
-  pixelId: string;
   userData?: {
     email?: string;
     phone?: string;
@@ -17,7 +16,8 @@ interface MetaPixelProps {
   };
 }
 
-const MetaPixel: React.FC<MetaPixelProps> = ({ pixelId, userData }) => {
+const MetaPixel: React.FC<MetaPixelProps> = ({ userData }) => {
+  const pixelId = "1121412753276579"; // Hardcoded Meta Pixel ID
   useEffect(() => {
     // Initialize fbq function
     if (typeof window !== "undefined") {
@@ -36,7 +36,7 @@ const MetaPixel: React.FC<MetaPixelProps> = ({ pixelId, userData }) => {
       window.fbq("init", pixelId, userData);
       window.fbq("track", "PageView");
     }
-  }, [pixelId, userData]);
+  }, [userData]);
 
   return (
     <>

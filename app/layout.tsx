@@ -55,7 +55,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID || ""} />
+        <MetaPixel />
         {children}
       </body>
     </html>
