@@ -8,6 +8,7 @@ export async function GET() {
       hasGooglePrivateKeyId: !!process.env.GOOGLE_PRIVATE_KEY_ID,
       hasGooglePrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
       hasGooglePrivateKeyBase64: !!process.env.GOOGLE_PRIVATE_KEY_BASE64,
+      hasGoogleServiceAccountJson: !!process.env.GOOGLE_SERVICE_ACCOUNT_JSON,
       hasGoogleClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
       hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
       // Show partial values for debugging (without exposing secrets)
@@ -15,6 +16,8 @@ export async function GET() {
       privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length || 0,
       privateKeyBase64Length:
         process.env.GOOGLE_PRIVATE_KEY_BASE64?.length || 0,
+      serviceAccountJsonLength:
+        process.env.GOOGLE_SERVICE_ACCOUNT_JSON?.length || 0,
       projectIdPreview:
         process.env.GOOGLE_PROJECT_ID?.substring(0, 10) + "..." || "missing",
       clientEmailPreview:

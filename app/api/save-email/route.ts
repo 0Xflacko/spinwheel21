@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { saveEmailToSheet, initializeSheet } from "@/lib/googleSheets";
+import { trackEmailSubmissionToMeta } from "@/lib/metaConversionsAPI";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,10 +46,25 @@ export async function POST(request: NextRequest) {
     // Save to Google Sheets
     const success = await saveEmailToSheet(submission);
 
+    // Track conversion to Meta (server-side)
+    let metaTracking = { leadSent: false, purchaseSent: false };
+    try {
+      metaTracking = await trackEmailSubmissionToMeta(
+        email,
+        prizeAmount,
+        request
+      );
+      console.log("Meta tracking results:", metaTracking);
+    } catch (metaError) {
+      console.error("Meta tracking error:", metaError);
+      // Don't fail the entire request if Meta tracking fails
+    }
+
     if (success) {
       return NextResponse.json({
         success: true,
         message: "Email saved successfully",
+        metaTracking, // Include Meta tracking status in response
       });
     } else {
       return NextResponse.json(

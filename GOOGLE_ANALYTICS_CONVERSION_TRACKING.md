@@ -2,7 +2,9 @@
 
 ## Overview
 
+//change domain first
 This guide will help you set up comprehensive conversion tracking for your spinning wheel landing page to measure:
+
 - **Page Views**: How many people visit your landing page
 - **Wheel Spins**: How many users engage with the spinning wheel
 - **Email Submissions**: How many users complete the email form (primary conversion)
@@ -19,6 +21,7 @@ This guide will help you set up comprehensive conversion tracking for your spinn
 ## Step 1: Create Google Analytics 4 (GA4) Property
 
 ### 1.1 Set up Google Analytics Account
+
 1. Go to [Google Analytics](https://analytics.google.com/)
 2. Click "Start measuring"
 3. Create an Account name (e.g., "WTF Games Marketing")
@@ -26,17 +29,20 @@ This guide will help you set up comprehensive conversion tracking for your spinn
 5. Click "Next"
 
 ### 1.2 Create Property
+
 1. Property name: "WTF Games Spin Wheel"
 2. Select your timezone and currency
 3. Click "Next"
 
 ### 1.3 Business Information
+
 1. Select your industry category
 2. Choose business size
 3. Select how you plan to use Analytics
 4. Click "Create"
 
 ### 1.4 Accept Terms of Service
+
 1. Select your country
 2. Accept Google Analytics Terms of Service
 3. Accept Google Measurement Terms of Service
@@ -46,6 +52,7 @@ This guide will help you set up comprehensive conversion tracking for your spinn
 ## Step 2: Set up Google Tag Manager (GTM)
 
 ### 2.1 Create GTM Account
+
 1. Go to [Google Tag Manager](https://tagmanager.google.com/)
 2. Click "Create Account"
 3. Account Name: "WTF Games"
@@ -54,6 +61,7 @@ This guide will help you set up comprehensive conversion tracking for your spinn
 6. Click "Create"
 
 ### 2.2 Install GTM Container
+
 1. Copy the GTM container code provided
 2. Add the first script to your `<head>` section
 3. Add the second script immediately after opening `<body>` tag
@@ -61,10 +69,11 @@ This guide will help you set up comprehensive conversion tracking for your spinn
 **For Next.js Implementation:**
 
 Create `components/GoogleTagManager.tsx`:
-```tsx
-'use client';
 
-import { useEffect } from 'react';
+```tsx
+"use client";
+
+import { useEffect } from "react";
 
 declare global {
   interface Window {
@@ -77,17 +86,17 @@ const GoogleTagManager = ({ gtmId }: { gtmId: string }) => {
   useEffect(() => {
     // Initialize dataLayer
     window.dataLayer = window.dataLayer || [];
-    
+
     // GTM script
-    const script1 = document.createElement('script');
+    const script1 = document.createElement("script");
     script1.async = true;
     script1.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
     document.head.appendChild(script1);
 
     // Initialize GTM
     window.dataLayer.push({
-      'gtm.start': new Date().getTime(),
-      event: 'gtm.js'
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js",
     });
   }, [gtmId]);
 
@@ -99,7 +108,7 @@ const GoogleTagManager = ({ gtmId }: { gtmId: string }) => {
           src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
           height="0"
           width="0"
-          style={{ display: 'none', visibility: 'hidden' }}
+          style={{ display: "none", visibility: "hidden" }}
         />
       </noscript>
     </>
@@ -110,8 +119,9 @@ export default GoogleTagManager;
 ```
 
 Add to your `app/layout.tsx`:
+
 ```tsx
-import GoogleTagManager from '@/components/GoogleTagManager';
+import GoogleTagManager from "@/components/GoogleTagManager";
 
 export default function RootLayout({
   children,
@@ -134,6 +144,7 @@ export default function RootLayout({
 ## Step 3: Configure GA4 in Google Tag Manager
 
 ### 3.1 Create GA4 Configuration Tag
+
 1. In GTM, click "Tags" → "New"
 2. Tag Name: "GA4 Configuration"
 3. Tag Type: "Google Analytics: GA4 Configuration"
@@ -142,6 +153,7 @@ export default function RootLayout({
 6. Save
 
 ### 3.2 Test the Setup
+
 1. Click "Preview" in GTM
 2. Enter your website URL
 3. Verify the GA4 tag fires on page load
@@ -156,47 +168,51 @@ export default function RootLayout({
 Add these event tracking functions to your components:
 
 **Create `utils/analytics.ts`:**
+
 ```typescript
 // Utility functions for tracking events
-export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+export const trackEvent = (
+  eventName: string,
+  parameters?: Record<string, any>
+) => {
+  if (typeof window !== "undefined" && window.dataLayer) {
     window.dataLayer.push({
       event: eventName,
-      ...parameters
+      ...parameters,
     });
   }
 };
 
 // Specific tracking functions
 export const trackWheelSpin = (prizeAmount?: number) => {
-  trackEvent('wheel_spin', {
-    event_category: 'engagement',
-    event_label: 'spinning_wheel',
-    prize_amount: prizeAmount
+  trackEvent("wheel_spin", {
+    event_category: "engagement",
+    event_label: "spinning_wheel",
+    prize_amount: prizeAmount,
   });
 };
 
 export const trackEmailSubmission = (email: string, prizeAmount: number) => {
-  trackEvent('email_submission', {
-    event_category: 'conversion',
-    event_label: 'email_form',
-    email_domain: email.split('@')[1],
-    prize_amount: prizeAmount
+  trackEvent("email_submission", {
+    event_category: "conversion",
+    event_label: "email_form",
+    email_domain: email.split("@")[1],
+    prize_amount: prizeAmount,
   });
 };
 
 export const trackExternalClick = (destination: string) => {
-  trackEvent('external_click', {
-    event_category: 'engagement',
-    event_label: 'external_link',
-    destination: destination
+  trackEvent("external_click", {
+    event_category: "engagement",
+    event_label: "external_link",
+    destination: destination,
   });
 };
 
 export const trackPageView = (pageName: string) => {
-  trackEvent('page_view', {
-    event_category: 'navigation',
-    page_name: pageName
+  trackEvent("page_view", {
+    event_category: "navigation",
+    page_name: pageName,
   });
 };
 ```
@@ -204,14 +220,15 @@ export const trackPageView = (pageName: string) => {
 ### 4.2 Implement Tracking in Your Components
 
 **Update `app/page.tsx`:**
+
 ```typescript
-import { trackWheelSpin, trackPageView } from '@/utils/analytics';
+import { trackWheelSpin, trackPageView } from "@/utils/analytics";
 
 export default function Home() {
   // ... existing code ...
 
   useEffect(() => {
-    trackPageView('landing_page');
+    trackPageView("landing_page");
   }, []);
 
   const handleSpinClick = () => {
@@ -233,14 +250,22 @@ export default function Home() {
 ```
 
 **Update `components/CompletionPage.tsx`:**
-```typescript
-import { trackEmailSubmission, trackExternalClick, trackPageView } from '@/utils/analytics';
 
-const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister }) => {
+```typescript
+import {
+  trackEmailSubmission,
+  trackExternalClick,
+  trackPageView,
+} from "@/utils/analytics";
+
+const CompletionPage: React.FC<CompletionPageProps> = ({
+  prizeAmount,
+  onRegister,
+}) => {
   // ... existing code ...
 
   useEffect(() => {
-    trackPageView('completion_page');
+    trackPageView("completion_page");
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -248,9 +273,9 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
     if (email && isConfirmed) {
       // Track email submission
       trackEmailSubmission(email, prizeAmount);
-      
+
       // ... existing API call code ...
-      
+
       setShowGoodLuck(true);
     }
   };
@@ -260,7 +285,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
     // ... existing JSX ...
     <button
       onClick={() => {
-        trackExternalClick('wtfleagues.com');
+        trackExternalClick("wtfleagues.com");
         window.open("https://wtfleagues.com", "_blank");
         setTimeout(() => onRegister(), 500);
       }}
@@ -280,6 +305,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ### 5.1 Create Custom Event Triggers
 
 **Wheel Spin Trigger:**
+
 1. GTM → Triggers → New
 2. Name: "Wheel Spin Event"
 3. Trigger Type: "Custom Event"
@@ -287,6 +313,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 5. Save
 
 **Email Submission Trigger:**
+
 1. GTM → Triggers → New
 2. Name: "Email Submission Event"
 3. Trigger Type: "Custom Event"
@@ -294,6 +321,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 5. Save
 
 **External Click Trigger:**
+
 1. GTM → Triggers → New
 2. Name: "External Click Event"
 3. Trigger Type: "Custom Event"
@@ -303,6 +331,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ### 5.2 Create GA4 Event Tags
 
 **Wheel Spin Tag:**
+
 1. GTM → Tags → New
 2. Name: "GA4 - Wheel Spin"
 3. Tag Type: "Google Analytics: GA4 Event"
@@ -315,6 +344,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 8. Save
 
 **Email Submission Tag:**
+
 1. GTM → Tags → New
 2. Name: "GA4 - Email Submission"
 3. Tag Type: "Google Analytics: GA4 Event"
@@ -327,6 +357,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 8. Save
 
 **External Click Tag:**
+
 1. GTM → Tags → New
 2. Name: "GA4 - External Click"
 3. Tag Type: "Google Analytics: GA4 Event"
@@ -342,12 +373,14 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ## Step 6: Set up Conversions in GA4
 
 ### 6.1 Mark Events as Conversions
+
 1. Go to GA4 → Events
 2. Find your custom events (wheel_spin, email_submission, external_click)
 3. Toggle "Mark as conversion" for the events you want to track as conversions
 4. Typically, mark `email_submission` as your primary conversion
 
 ### 6.2 Create Custom Conversions
+
 1. GA4 → Configure → Conversions
 2. Click "New conversion event"
 3. Event Name: "qualified_lead" (for users who both spin and submit email)
@@ -358,16 +391,21 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ## Step 7: Create Goals and Audiences
 
 ### 7.1 Create Audiences
+
 **Engaged Users:**
+
 - Users who triggered "wheel_spin" event
 
 **High-Intent Users:**
+
 - Users who completed "email_submission"
 
 **Complete Funnel Users:**
+
 - Users who completed all three events
 
 ### 7.2 Set up Funnels
+
 1. GA4 → Explore → Funnel Exploration
 2. Create funnel steps:
    - Step 1: Page view (landing page)
@@ -380,12 +418,14 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ## Step 8: Testing and Validation
 
 ### 8.1 Test All Events
+
 1. Use GTM Preview mode
 2. Go through the complete user journey
 3. Verify all events fire correctly
 4. Check GA4 Real-time reports
 
 ### 8.2 Validation Checklist
+
 - [ ] Page views tracked correctly
 - [ ] Wheel spin events firing
 - [ ] Email submission events firing
@@ -398,6 +438,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 ## Step 9: Create Reports and Dashboards
 
 ### 9.1 Key Metrics to Track
+
 - **Traffic Sources**: Where users come from
 - **Conversion Rate**: Email submissions / Page views
 - **Engagement Rate**: Wheel spins / Page views
@@ -405,7 +446,9 @@ const CompletionPage: React.FC<CompletionPageProps> = ({ prizeAmount, onRegister
 - **Cost per Conversion**: Ad spend / Email submissions
 
 ### 9.2 Custom Reports
+
 Create reports for:
+
 - Daily conversion tracking
 - Traffic source performance
 - User behavior flow
@@ -416,31 +459,37 @@ Create reports for:
 ## Step 10: Advanced Tracking (Optional)
 
 ### 10.1 Enhanced Ecommerce
+
 Track the "prize value" as ecommerce value:
+
 ```typescript
 export const trackPrizeWin = (prizeAmount: number) => {
-  trackEvent('purchase', {
-    currency: 'USD',
+  trackEvent("purchase", {
+    currency: "USD",
     value: prizeAmount,
-    items: [{
-      item_id: 'raffle_entry',
-      item_name: 'Raffle Entry',
-      category: 'Gaming',
-      quantity: 1,
-      price: prizeAmount
-    }]
+    items: [
+      {
+        item_id: "raffle_entry",
+        item_name: "Raffle Entry",
+        category: "Gaming",
+        quantity: 1,
+        price: prizeAmount,
+      },
+    ],
   });
 };
 ```
 
 ### 10.2 User Properties
+
 Track user characteristics:
+
 ```typescript
 export const setUserProperties = (properties: Record<string, any>) => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  if (typeof window !== "undefined" && window.dataLayer) {
     window.dataLayer.push({
-      event: 'set_user_properties',
-      user_properties: properties
+      event: "set_user_properties",
+      user_properties: properties,
     });
   }
 };
@@ -451,12 +500,14 @@ export const setUserProperties = (properties: Record<string, any>) => {
 ## Troubleshooting
 
 ### Common Issues:
+
 1. **Events not firing**: Check browser console for errors
 2. **GTM not loading**: Verify container ID is correct
 3. **GA4 not receiving data**: Check Measurement ID
 4. **Real-time data not showing**: Allow up to 30 minutes for processing
 
 ### Debug Tools:
+
 - GTM Preview Mode
 - GA4 DebugView
 - Browser Developer Tools
@@ -467,18 +518,20 @@ export const setUserProperties = (properties: Record<string, any>) => {
 ## Privacy and Compliance
 
 ### GDPR/Privacy Considerations:
+
 - Implement cookie consent banner
 - Allow users to opt-out of tracking
 - Update privacy policy
 - Consider using Google Consent Mode
 
 ### Example Consent Implementation:
+
 ```typescript
 export const updateConsentState = (granted: boolean) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('consent', 'update', {
-      analytics_storage: granted ? 'granted' : 'denied',
-      ad_storage: granted ? 'granted' : 'denied'
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("consent", "update", {
+      analytics_storage: granted ? "granted" : "denied",
+      ad_storage: granted ? "granted" : "denied",
     });
   }
 };

@@ -4,77 +4,54 @@ import { google } from "googleapis";
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_ID;
 const SHEET_NAME = "WTF Games Email Submissions"; // Custom sheet name
 
-// Function to properly format the private key
-function formatPrivateKey(): string | undefined {
+// Function to get service account credentials
+function getServiceAccountCredentials(): any {
   try {
-    // First, try to use Base64 encoded private key (recommended for serverless)
-    const base64PrivateKey = process.env.GOOGLE_PRIVATE_KEY_BASE64;
-    if (base64PrivateKey) {
-      console.log("Using Base64 encoded private key");
+    // Method 1: Use JSON service account file (recommended for serverless)
+    const serviceAccountJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    if (serviceAccountJson) {
+      console.log("Using JSON service account credentials");
       try {
-        const decodedKey = Buffer.from(base64PrivateKey, "base64").toString(
-          "utf8"
-        );
-        console.log("Base64 private key decoded successfully");
-        console.log("Decoded key length:", decodedKey.length);
-        console.log("Key starts with:", decodedKey.substring(0, 27));
-        console.log(
-          "Key ends with:",
-          decodedKey.substring(decodedKey.length - 25)
-        );
-        return decodedKey;
+        const credentials = JSON.parse(serviceAccountJson);
+        console.log("JSON service account credentials parsed successfully");
+        console.log("Project ID:", credentials.project_id);
+        console.log("Client email:", credentials.client_email);
+        return credentials;
       } catch (error) {
-        console.error("Error decoding Base64 private key:", error);
-        // Fall back to regular private key
+        console.error("Error parsing JSON service account credentials:", error);
+        // Fall back to individual env vars
       }
     }
 
-    // Fallback: try regular private key
+    // Method 2: Try individual environment variables (fallback)
+    console.log("Using individual environment variables (fallback)");
+
     const privateKey = process.env.GOOGLE_PRIVATE_KEY;
     if (!privateKey) {
-      console.error(
-        "Neither GOOGLE_PRIVATE_KEY_BASE64 nor GOOGLE_PRIVATE_KEY is set"
-      );
-      return undefined;
+      console.error("GOOGLE_PRIVATE_KEY not found");
+      return null;
     }
 
-    console.log("Using regular private key (fallback)");
-
-    // Remove any existing formatting and clean the key
+    // Clean and format private key
     let cleanKey = privateKey
       .replace(/\\n/g, "\n") // Replace literal \n with actual newlines
       .replace(/"/g, "") // Remove any quotes
       .trim();
 
-    // Ensure the key has proper BEGIN/END markers
-    if (!cleanKey.includes("-----BEGIN PRIVATE KEY-----")) {
-      console.error("Private key missing BEGIN marker");
-      return undefined;
-    }
+    const credentials = {
+      type: "service_account",
+      project_id: process.env.GOOGLE_PROJECT_ID,
+      private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+      private_key: cleanKey,
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+    };
 
-    if (!cleanKey.includes("-----END PRIVATE KEY-----")) {
-      console.error("Private key missing END marker");
-      return undefined;
-    }
-
-    // Split into lines and clean each line
-    const lines = cleanKey.split("\n");
-    const cleanLines = lines
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-
-    // Rejoin with proper newlines
-    const formattedKey = cleanLines.join("\n");
-
-    console.log("Regular private key formatted successfully");
-    console.log("Key length:", formattedKey.length);
-    console.log("First line:", cleanLines[0]);
-    console.log("Last line:", cleanLines[cleanLines.length - 1]);
-
-    return formattedKey;
+    console.log("Individual credentials assembled successfully");
+    return credentials;
   } catch (error) {
-    console.error("Error formatting private key:", error);
-    return undefined;
+    console.error("Error getting service account credentials:", error);
+    return null;
   }
 }
 
@@ -83,21 +60,14 @@ let auth: any;
 let sheets: any;
 
 try {
-  const formattedPrivateKey = formatPrivateKey();
+  const credentials = getServiceAccountCredentials();
 
-  if (!formattedPrivateKey) {
-    throw new Error("Failed to format private key");
+  if (!credentials) {
+    throw new Error("Failed to get service account credentials");
   }
 
   auth = new google.auth.GoogleAuth({
-    credentials: {
-      type: "service_account",
-      project_id: process.env.GOOGLE_PROJECT_ID,
-      private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-      private_key: formattedPrivateKey,
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      client_id: process.env.GOOGLE_CLIENT_ID,
-    },
+    credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
