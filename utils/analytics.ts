@@ -3,7 +3,15 @@ declare global {
   interface Window {
     dataLayer: any[];
     gtag: (...args: any[]) => void;
-    fbq: (...args: any[]) => void;
+    fbq: {
+      (...args: any[]): void;
+      q?: any[];
+      push?: (...args: any[]) => void;
+      loaded?: boolean;
+      version?: string;
+      queue?: any[];
+      callMethod?: (...args: any[]) => void;
+    };
     _fbq: any;
   }
 }

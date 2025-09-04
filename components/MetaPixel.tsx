@@ -19,19 +19,7 @@ interface MetaPixelProps {
 const MetaPixel: React.FC<MetaPixelProps> = ({ userData }) => {
   const pixelId = "1121412753276579"; // Hardcoded Meta Pixel ID
   useEffect(() => {
-    // Initialize fbq function
-    if (typeof window !== "undefined") {
-      window.fbq =
-        window.fbq ||
-        function (...args: any[]) {
-          (window.fbq.q = window.fbq.q || []).push(args);
-        };
-      window._fbq = window._fbq || window.fbq;
-      window.fbq.push = window.fbq;
-      window.fbq.loaded = true;
-      window.fbq.version = "2.0";
-      window.fbq.queue = [];
-
+    if (typeof window !== "undefined" && window.fbq) {
       // Initialize pixel with enhanced matching
       window.fbq("init", pixelId, userData);
       window.fbq("track", "PageView");
