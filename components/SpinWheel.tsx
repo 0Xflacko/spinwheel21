@@ -5,26 +5,30 @@ interface SpinWheelProps {
   isSpinning: boolean;
   rotationDegrees: number;
   onSpinComplete?: (prizeAmount: number) => void;
+  onMobileChange: (isMobile: boolean) => void; // Add a prop to pass isMobile
 }
 
 const SpinWheel: React.FC<SpinWheelProps> = ({
   isSpinning,
   rotationDegrees,
   onSpinComplete,
+  onMobileChange, // Destructure onMobileChange
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [hasTriggeredCompletion, setHasTriggeredCompletion] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 640);
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      onMobileChange(mobile); // Pass the isMobile state to the parent
     };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
     return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
+  }, [onMobileChange]); // Add onMobileChange to dependency array
 
   // Reset completion flag when starting a new spin
   useEffect(() => {

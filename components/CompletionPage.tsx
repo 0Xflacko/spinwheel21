@@ -12,14 +12,16 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
   onRegister,
 }) => {
   const [email, setEmail] = useState("");
+  const [birthday, setBirthday] = useState(""); // Add birthday state
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [showGoodLuck, setShowGoodLuck] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && isConfirmed) {
+    if (email && isConfirmed && birthday) {
+      // Add birthday to validation
       try {
-        // Save email to Google Sheets
+        // Save email and birthday to Google Sheets
         const response = await fetch("/api/save-email", {
           method: "POST",
           headers: {
@@ -27,6 +29,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
           },
           body: JSON.stringify({
             email,
+            birthday, // Include birthday in the payload
             prizeAmount,
           }),
         });
@@ -486,17 +489,23 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
       `}</style>
 
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-center w-full max-w-lg z-30 min-h-screen py-8 relative">
+      <div className="flex flex-col items-center justify-center w-full max-w-lg z-30 h-screen py-2 relative">
+        {" "}
+        {/* Reduced py-4 to py-2 */}
         {/* WTF Games Logo */}
-        <div className="w-32 h-24 sm:w-40 sm:h-30 md:w-48 md:h-36 mb-8">
+        <div className="w-32 h-24 sm:w-40 sm:h-30 md:w-48 md:h-36 mb-2">
+          {" "}
+          {/* Reduced mb-4 to mb-2 */}
           <img src="/logo/logo.svg" alt="WTF Logo" className="w-full h-full" />
         </div>
-
         {/* Congratulations Text - Better Centered */}
-        <div className="text-center mb-12 px-4">
+        <div className="text-center mb-2 px-4">
+          {" "}
+          {/* Reduced mb-4 to mb-2 */}
           <h1
-            className="text-white text-3xl sm:text-3xl md:text-4xl font-bold uppercase mb-6 leading-tight text-center"
+            className="text-3xl sm:text-3xl md:text-4xl font-bold uppercase mb-2 leading-tight text-center"
             style={{
+              color: "#00FF00", // Apply neon green color
               fontFamily:
                 "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
             }}
@@ -504,9 +513,9 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
             YOU WON A
           </h1>
           <div
-            className="text-6xl sm:text-6xl md:text-7xl font-bold uppercase mb-4 leading-tight text-center"
+            className="text-6xl sm:text-6xl md:text-7xl font-bold uppercase mb-2 leading-tight text-center"
             style={{
-              color: "#00FF00",
+              color: "#00FF00", // Apply neon green color
               fontFamily:
                 "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
               textShadow: "0 0 20px rgba(0, 255, 0, 0.5)",
@@ -515,8 +524,9 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
             ${prizeAmount} USDC
           </div>
           <div
-            className="text-white text-2xl sm:text-2xl md:text-3xl font-bold uppercase leading-tight"
+            className="text-2xl sm:text-2xl md:text-3xl font-bold uppercase leading-tight"
             style={{
+              color: "#00FF00", // Apply neon green color
               fontFamily:
                 "'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
               textAlign: "center",
@@ -526,9 +536,10 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
             RAFFLE TICKET! 🚀
           </div>
         </div>
-
         {/* Age Confirmation - Always visible and centered */}
-        <div className="w-full max-w-md mb-8">
+        <div className="w-full max-w-md mb-4">
+          {" "}
+          {/* Reduced mb-8 to mb-4 */}
           <div className="flex items-center justify-center">
             <label className="flex items-center cursor-pointer hover:opacity-80 transition-opacity">
               <div className="relative">
@@ -539,7 +550,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
                   className="sr-only"
                 />
                 <div
-                  className={`w-7 h-7 rounded border-2 flex items-center justify-center transition-all ${
+                  className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
                     isConfirmed
                       ? "bg-green-500 border-green-500 shadow-lg shadow-green-500/50"
                       : "bg-transparent border-gray-400 hover:border-gray-300"
@@ -547,7 +558,7 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
                 >
                   {isConfirmed && (
                     <svg
-                      className="w-5 h-5 text-white"
+                      className="w-4 h-4 text-white"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -562,13 +573,14 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
                   )}
                 </div>
               </div>
-              <span className="text-gray-300 text-lg sm:text-lg md:text-xl ml-4 font-medium">
-                I CONFIRM I AM 18+ YEARS OF AGE
+              <span className="text-gray-300 text-base sm:text-base md:text-lg ml-3 font-medium">
+                {" "}
+                {/* Reduced text-lg to text-base and ml-4 to ml-3 */}I CONFIRM I
+                AM 18+ YEARS OF AGE
               </span>
             </label>
           </div>
         </div>
-
         {/* Registration Section */}
         <div
           className={`w-full max-w-lg transition-all duration-300 ${
@@ -587,50 +599,85 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
             REGISTER YOUR DETAILS
           </h2>
 
-          <p className="text-gray-400 text-sm sm:text-base md:text-lg text-center mb-6">
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg text-center mb-4">
+            {" "}
+            {/* Reduced mb-6 to mb-4 */}
             We collect your email to send you updates about the&nbsp;raffle
             <br />
             we will not contact you for marketing purposes
           </p>
 
-          {/* Email Form - Centered and Improved */}
+          {/* Email and Birthday Form - Centered and Improved */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="text-center">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                className="w-full px-6 py-4 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none text-center text-lg"
-                style={{
-                  transition: "all 0.3s ease",
-                }}
-                onFocus={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.style.borderColor = "#00FF00";
-                  target.style.boxShadow = "0 0 0 2px rgba(0, 255, 0, 0.2)";
-                }}
-                onBlur={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.style.borderColor = "#4B5563";
-                  target.style.boxShadow = "none";
-                }}
-                required
-              />
-            </div>
-
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              {" "}
+              {/* Flex container for horizontal layout */}
+              <div className="w-full sm:w-1/2">
+                {" "}
+                {/* Adjust width for email input */}
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email address"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none text-center text-base"
+                  style={{
+                    transition: "all 0.3s ease",
+                  }}
+                  onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                    const target = e.target as HTMLInputElement;
+                    target.style.borderColor = "#00FF00";
+                    target.style.boxShadow = "0 0 0 2px rgba(0, 255, 0, 0.2)";
+                  }}
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    const target = e.target as HTMLInputElement;
+                    target.style.borderColor = "#4B5563";
+                    target.style.boxShadow = "none";
+                  }}
+                  required
+                />
+              </div>
+              <div className="w-full sm:w-1/2">
+                {" "}
+                {/* Adjust width for birthday input */}
+                <input
+                  type="text" // Changed type from "date" to "text"
+                  value={birthday}
+                  onChange={(e) => setBirthday(e.target.value)}
+                  placeholder="Date of Birth" // Changed placeholder text
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none text-center text-base"
+                  style={{
+                    transition: "all 0.3s ease",
+                  }}
+                  onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                    e.target.type = "date"; // Change type to date on focus
+                    e.target.style.borderColor = "#00FF00";
+                    e.target.style.boxShadow = "0 0 0 2px rgba(0, 255, 0, 0.2)";
+                  }}
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    if (!e.target.value) {
+                      e.target.type = "text"; // Change type back to text if empty
+                    }
+                    e.target.style.borderColor = "#4B5563";
+                    e.target.style.boxShadow = "none";
+                  }}
+                  required
+                />
+              </div>
+            </div>{" "}
+            {/* Close flex container */}
             <button
               type="submit"
-              disabled={!email || !isConfirmed}
-              className={`w-full py-4 px-6 rounded-lg font-bold text-xl sm:text-xl md:text-2xl uppercase transition-all ${
-                email && isConfirmed
+              disabled={!email || !isConfirmed || !birthday} // Add birthday to disable condition
+              className={`w-full py-3 px-4 rounded-lg font-bold text-lg sm:text-lg md:text-xl uppercase transition-all ${
+                email && isConfirmed && birthday
                   ? "text-black cursor-pointer"
                   : "bg-gray-600 text-gray-400 cursor-not-allowed"
               }`}
               style={{
                 fontFamily:
                   "'Korolev', 'Roboto Condensed', 'Arial Black', 'Arial', sans-serif",
-                ...(email && isConfirmed
+                ...(email && isConfirmed && birthday
                   ? {
                       backgroundColor: "#00FF00",
                       boxShadow:
@@ -639,14 +686,14 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
                   : {}),
               }}
               onMouseEnter={(e) => {
-                if (email && isConfirmed) {
+                if (email && isConfirmed && birthday) {
                   const target = e.target as HTMLButtonElement;
                   target.style.backgroundColor = "#00E600";
                   target.style.transform = "translateY(-2px)";
                 }
               }}
               onMouseLeave={(e) => {
-                if (email && isConfirmed) {
+                if (email && isConfirmed && birthday) {
                   const target = e.target as HTMLButtonElement;
                   target.style.backgroundColor = "#00FF00";
                   target.style.transform = "translateY(0px)";
@@ -657,9 +704,10 @@ const CompletionPage: React.FC<CompletionPageProps> = ({
             </button>
           </form>
         </div>
-
         {/* Social Media Links */}
-        <div className="flex gap-4 mt-8">
+        <div className="flex gap-4 mt-4">
+          {" "}
+          {/* Reduced mt-8 to mt-4 */}
           <a href="#" className="text-gray-400 hover:text-white">
             <img src="/instagram (1).svg" alt="Instagram" className="w-6 h-6" />
           </a>

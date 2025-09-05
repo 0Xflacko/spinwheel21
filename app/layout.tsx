@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
 import Script from "next/script"; // Import Script for nonce
+import { headers } from "next/headers"; // Import headers for nonce
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +25,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const nonce = crypto.randomBytes(16).toString('base64'); // Generate nonce for CSP
+  const headersList = headers();
+  const nonce = headersList.get("x-nonce") || ""; // Retrieve nonce from headers
 
   return (
     <html lang="en">
       <head>
         {/* Google Tag Manager */}
-        <script
-          nonce={nonce} // Apply nonce to GTM script
+        <Script
+          id="gtm-script" // Unique ID for the script
+          strategy="afterInteractive" // Load after the page is interactive
+          {...(nonce ? { nonce } : {})} // Conditionally apply nonce
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

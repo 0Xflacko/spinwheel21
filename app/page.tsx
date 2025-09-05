@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SpinWheel from "../components/SpinWheel";
 import CompletionPage from "../components/CompletionPage";
 
@@ -9,21 +9,28 @@ export default function Home() {
   const [rotationDegrees, setRotationDegrees] = useState(0);
   const [showCompletion, setShowCompletion] = useState(false);
   const [prizeAmount, setPrizeAmount] = useState(0);
+  const [hamsterState, setHamsterState] = useState("fattie"); // 'fattie', 'hamrun', 'drip'
+  const [isStopping, setIsStopping] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // New state for mobile
 
   const handleSpinClick = () => {
     if (!isSpinning) {
       setIsSpinning(true);
+      setHamsterState("hamrun"); // Change to hamrun when spin starts
       const randomDegrees = Math.floor(Math.random() * 360) + 360 * 5; // Spin at least 5 full rotations
       setRotationDegrees(randomDegrees);
 
       setTimeout(() => {
         setIsSpinning(false);
+        setIsStopping(true); // Set isStopping to true when spinning stops
       }, 10000); // Stop after 10 seconds
     }
   };
 
   const handleSpinComplete = (amount: number) => {
     setPrizeAmount(amount);
+    setHamsterState("drip"); // Change to drip when spin completes
+    setIsStopping(false); // Reset isStopping
     // Show completion page after a short delay
     setTimeout(() => {
       setShowCompletion(true);
@@ -34,6 +41,11 @@ export default function Home() {
     // Handle registration logic here
     console.log(`User registered for $${prizeAmount} USDC raffle`);
     // You can add API calls, form validation, etc.
+  };
+
+  const handleMobileChange = (mobile: boolean) => {
+    // Callback to update isMobile
+    setIsMobile(mobile);
   };
 
   // Remove this effect - let the SpinWheel handle the final rotation calculation
@@ -120,12 +132,71 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center w-full max-w-4xl mt-72 sm:mt-64 md:mt-72 lg:mt-88 xl:mt-104 pt-4 sm:pt-8 md:pt-2">
+      <div className="flex flex-col items-center w-full max-w-4xl mt-72 sm:mt-64 md:mt-72 lg:mt-88 xl:mt-104 pt-4 sm:pt-8 md:pt-2 relative">
+        {/* Hamster Image */}
+        <div
+          className={`absolute z-40 ${
+            hamsterState === "fattie" ? "block" : "hidden"
+          }`}
+          style={{
+            left: "50%",
+            top: isMobile ? "0px" : "-25px", // Moved further down
+            transform: "translateX(-50%)", // Centered horizontally
+            width: isMobile ? "200px" : "250px", // Increased size
+            height: isMobile ? "200px" : "250px", // Increased size
+          }}
+        >
+          <img
+            src="/hamsta/fattie.png"
+            alt="Fattie Hamster"
+            className="w-full h-full object-contain"
+          />
+        </div>
+
+        <div
+          className={`absolute z-40 ${
+            hamsterState === "hamrun" ? "block" : "hidden"
+          }`}
+          style={{
+            left: "50%",
+            top: isMobile ? "0px" : "-40px", // Moved further down
+            transform: "translateX(-50%)", // Centered horizontally
+            width: isMobile ? "200px" : "250px", // Increased size
+            height: isMobile ? "200px" : "250px", // Increased size
+          }}
+        >
+          <img
+            src="/hamsta/hamrun.png"
+            alt="Running Hamster"
+            className="w-full h-full object-contain"
+          />
+        </div>
+
+        <div
+          className={`absolute z-40 ${
+            hamsterState === "drip" ? "block" : "hidden"
+          }`}
+          style={{
+            left: "50%",
+            top: isMobile ? "-40px" : "-25px", // Moved further down
+            transform: "translateX(-50%)", // Centered horizontally
+            width: isMobile ? "200px" : "250px", // Increased size
+            height: isMobile ? "200px" : "250px", // Increased size
+          }}
+        >
+          <img
+            src="/hamsta/Ham_drip.png"
+            alt="Drip Hamster"
+            className="w-full h-full object-contain"
+          />
+        </div>
+
         {/* Spin Wheel */}
         <SpinWheel
           isSpinning={isSpinning}
           rotationDegrees={rotationDegrees}
           onSpinComplete={handleSpinComplete}
+          onMobileChange={handleMobileChange} // Pass the handler to SpinWheel
         />
 
         {/* Spin Button */}

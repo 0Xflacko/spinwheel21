@@ -7,6 +7,7 @@ A Next.js web application featuring an interactive spinning wheel for prize give
 - 🎲 Interactive spinning wheel with 6 prize segments ($20, $50, $100, $200, $300, $500)
 - 📧 Email collection with Google Sheets integration
 - 🎉 Animated confetti and prize celebration
+- 🐹 Dynamic Hamster animations based on wheel spin state
 - 📱 Fully responsive design (mobile-first)
 - ⚡ Built with Next.js 15 and TypeScript
 - 🎨 Styled with Tailwind CSS
@@ -29,30 +30,35 @@ A Next.js web application featuring an interactive spinning wheel for prize give
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Google Cloud Console account (for Sheets API)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/0xflacko/wtf-games-spinwheel.git
 cd wtf-games-spinwheel
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
+
 Fill in your Google Sheets API credentials.
 
 4. Run the development server:
+
 ```bash
 npm run dev
 ```

@@ -5,12 +5,13 @@ import { trackEmailSubmissionToMeta } from "@/lib/metaConversionsAPI";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, prizeAmount } = body;
+    const { email, birthday, prizeAmount } = body; // Destructure birthday
 
     // Validate required fields
-    if (!email || !prizeAmount) {
+    if (!email || !birthday || !prizeAmount) {
+      // Validate birthday
       return NextResponse.json(
-        { error: "Email and prize amount are required" },
+        { error: "Email, birthday, and prize amount are required" },
         { status: 400 }
       );
     }
@@ -34,6 +35,7 @@ export async function POST(request: NextRequest) {
     // Prepare submission data
     const submission = {
       email,
+      birthday, // Include birthday in submission
       prizeAmount,
       timestamp: new Date().toISOString(),
       ipAddress,

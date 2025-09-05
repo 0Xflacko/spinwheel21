@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 // Google Sheets configuration
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_ID;
-const SHEET_NAME = "WTF Games Email Submissions"; // Custom sheet name
+const SHEET_NAME = "Birthday A/B Test Submissions"; // Custom sheet name
 
 // Function to get service account credentials
 function getServiceAccountCredentials(): any {
@@ -79,6 +79,7 @@ try {
 
 export interface EmailSubmission {
   email: string;
+  birthday: string; // Add birthday to the interface
   prizeAmount: number;
   timestamp: string;
   ipAddress?: string;
@@ -107,6 +108,7 @@ export async function saveEmailToSheet(
       [
         submission.timestamp,
         submission.email,
+        submission.birthday, // Add birthday to the values array
         `$${submission.prizeAmount}`,
         submission.ipAddress || "Unknown",
         submission.userAgent || "Unknown",
@@ -116,7 +118,7 @@ export async function saveEmailToSheet(
     // Append the data to the sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A:E`,
+      range: `${SHEET_NAME}!A:F`, // Update the range to include the new column
       valueInputOption: "RAW",
       insertDataOption: "INSERT_ROWS",
       requestBody: {
@@ -204,7 +206,7 @@ export async function initializeSheet(): Promise<boolean> {
     try {
       const response = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range: `${SHEET_NAME}!A1:E1`,
+        range: `${SHEET_NAME}!A1:F1`, // Update the range to include the new column
       });
 
       // If headers exist and are not empty, we're good
@@ -220,12 +222,19 @@ export async function initializeSheet(): Promise<boolean> {
 
     // Add headers if they don't exist or sheet is empty
     const headers = [
-      ["Timestamp", "Email", "Prize Amount", "IP Address", "User Agent"],
+      [
+        "Timestamp",
+        "Email",
+        "Birthday",
+        "Prize Amount",
+        "IP Address",
+        "User Agent",
+      ],
     ];
 
     await sheets.spreadsheets.values.update({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A1:E1`,
+      range: `${SHEET_NAME}!A1:F1`, // Update the range to include the new column
       valueInputOption: "RAW",
       requestBody: {
         values: headers,
